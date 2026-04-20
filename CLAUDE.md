@@ -30,20 +30,43 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## 발제 핵심 메시지
 
-> **Throughline**: "Nothing About Us Without Us, 공익 AI에도 적용된다. 장애 전문성이 공익 AI와 만날 때 AI의 잠재력이 극대화된다."
+> **내부 Throughline (발표자 노트)**: "Nothing About Us Without Us, 공익 AI에도 적용된다. 장애 전문성이 공익 AI와 만날 때 AI의 잠재력이 극대화된다."
+>
+> **공개 발화용(슬라이드 부제)**: "현장에서 써 온 AI · 공익 AI와 만나는 길"
 
-구조: 사용기 블록은 **장애 전문성의 세 얼굴** (C 구조) + 각 기둥당 **4층 템플릿** (장애 전문성 → 구체 도구 → 범용 기여 → 공익 AI 담론 접점). 상세는 `발제 구성안.md` 참조.
+내부 Throughline은 발표자가 가지고 가는 **강한 북극성**이고, 슬라이드·말투는 더 부드럽고 조심스러운 얹기 톤을 유지한다. 청중이 시민기술네트워크 담론 내부자이므로 설득보다는 **공유 질문** 자세.
 
-## 산출물
+구조: 본론 사례 블록은 **세 역할의 AI 실천** (접근성 도구 · 교실 수업 도구 · 노동조합 운영 도구). 각 실천의 3층 구조 — 왜 필요했나 → 구체 도구 → 가치 확장 접점. 상세는 `발제 구성안.md` 참조.
+
+## 산출물 (2026.4.20 기준 · 완성본)
 
 | 파일 / 폴더 | 역할 | 상태 |
 |-------------|------|------|
-| `발제 구성안.md` | 발표 대본 + Q&A 13건 대응 메모 + 준비물·사전테스트 체크리스트 | 완성 |
-| `index.html` | 발표 슬라이드 (총 19장, 45분 흐름) | 완성. 260403 세미나 스타일 계승 (키보드 내비/ARIA/라이브 리전/포커스 이동) |
+| `README.md` | GitHub 저장소 소개 · 슬라이드 구성 · 자산·시연 링크 정리 | 완성 |
+| `발제 구성안.md` | 발표자 진행 대본 + Q&A 대응 메모 + 체크리스트 (내부 Throughline 유지) | 완성 |
+| `index.html` | 발표 슬라이드 (총 **15장**, 45분 흐름) | 완성. 260403 세미나 스타일 계승 (키보드 내비/ARIA/라이브 리전/포커스 이동) + `data-bg` 배경 이미지 오버레이 |
 | `sfx/` | 슬라이드 전환·섹션 변경·레벨업 효과음 + **laugh-wrong/correct.wav** (Word Bomb 해프닝 재생용) | 완성. 260403 세미나에서 복사 |
-| `images/` | 슬라이드 배경 이미지 | 비어있음 (현재 슬라이드는 배경 이미지 없이도 완성, 선택적 추가 가능) |
-| `narration/` | 슬라이드 내레이션 TTS | 비어있음 (라이브 발표이므로 불필요. 녹화 시에만 생성) |
+| `images/` | 슬라이드별 배경 이미지 `image-01.png`~`image-15.png` + `prompts.json` | 완성. **Gemini 2.5 Flash Image** batch 생성 · 다크 시네마틱 톤 통일 |
+| `narration/` | 슬라이드별 핵심 문장 TTS `slide-NN.txt` + `slide-NN_gemini_tts.wav` | 완성. **Gemini TTS Kore voice** · 15문장. `narrationEnabled = true` 기본, 🔊 토글로 제어 |
 | `[블로그] Nothing About Us Without Us, 공익 AI에도 적용된다.md` | 웨비나 후 공개용 블로그 원고 | 완성 (em-dash 금지·에세이톤 준수. 약 2,000자) |
+
+### GitHub 배포
+
+- **저장소**: https://github.com/Engccer/civic-tech-webinar-260420 (public)
+- **GitHub Pages**: https://engccer.github.io/civic-tech-webinar-260420/
+- 브랜치 `master` root path로 Pages 활성화. 첫 빌드 ~1분.
+
+### 자산 재생성 명령 (필요 시)
+
+```bash
+# 내레이션 TTS (Kore voice 기본)
+for i in 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15; do
+  python "C:/Users/pc/Converters/TTS/gemini_tts.py" "narration/slide-${i}.txt" --voice Kore
+done
+
+# 배경 이미지 batch
+node "C:/Users/pc/Converters/Image-Generation/gemini-image-gen.mjs" --batch images/prompts.json images/
+```
 
 ## 참고 자료 (맥락용)
 
@@ -243,43 +266,47 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 90분 구성: 발표 45분 + Q&A 45분. 상세 진행 대본은 `발제 구성안.md`.
 
-### 타임라인
+### 타임라인 (15 슬라이드)
 
-| 구간 | 시간 | 주요 소재 |
-|------|------|-----------|
-| 오프닝 | 3분 | Throughline 선언 |
-| 정책 블록 | 10분 | 매니페스토 4대 제안 → 김헌용 단독 제안 → 배경 법령 → AIDT 폐기 이후 분산 구조 |
-| 기둥 1 (일상) | 7분 | docparse + hwpx-automation, 서사 중심 (시연 없음) |
-| 기둥 2 (장교조) | 10분 | 3반경: 중집위 스킬 / 고충 상담사 / **장교조 어시스턴트 라이브** |
-| 기둥 3 (수업) | 12분 | Word Bomb + laugh 해프닝 오디오 2종 / **Story Detective 라이브** / Pick Me 접근성 철학 / 자리표 한계 고백 |
-| 클로징 | 3분 | 세 기둥의 귀결 + 시민기술네트워크에 보내는 3대 제안 |
-| Q&A | 45분 | 예상 질문 13건 대응 메모 `발제 구성안.md` 참조 |
+| 구간 | 시간 | 슬라이드 | 주요 소재 |
+|------|------|----------|-----------|
+| 오프닝 + 두 고민 프레임 | 10분 | 1~6 | Title · Thesis · 매니페스토 + 두 고민(접근성 괴리 / AIDT 이후 교육 AI 공백) · 법령 표 10개 · 세 실천 예고 |
+| 실천 1 · 접근성 도구 | 7분 | 7 | docparse + hwpx-automation, 서사 중심 (시연 없음) |
+| 실천 2 · 교실 수업 도구 | 13분 | 8~11 | Word Bomb + laugh 해프닝 / **Story Detective 라이브** / Pick Me 접근성 철학 / 자리표 한계 고백 |
+| 실천 3 · 노동조합 운영 도구 | 10분 | 12~13 | 3반경 (중집위·고충·어시스턴트) / **장교조 어시스턴트 라이브** |
+| 클로징 · 가치 확장 | 5분 | 14~15 | 공익 AI 가치의 가능한 확장 · 조심스러운 얹기 + 감사합니다 |
+| Q&A | 45분 | — | 예상 질문 13건 대응 메모 `발제 구성안.md` 참조 |
 
-### 사용기 블록 구조 원리
+### 사례 블록 구조 원리
 
-각 기둥은 **4층 템플릿**으로 전개:
+각 실천은 **3층 템플릿**으로 전개:
 
 ```
-[장애 전문성] → [구체 도구] → [범용 기여] → [공익 AI 담론 접점]
+[왜 필요했나] → [구체 도구] → [가치 확장 접점]
 ```
 
-| 기둥 | 장애 전문성 | 구체 도구 | 범용 기여 | 공익 AI 접점 |
-|------|-------------|-----------|-----------|---------------|
-| 1. 일상 | 웹접근성·스크린리더 실사용 | docparse + hwpx-automation | LLM 도입 1단계 = 문서 파이프라인 | 공익 AI 인프라의 '기본 벽돌' |
-| 2. 장교조 | 소수 조직·장애인교원 특화 업무 감각 | 스킬 19 + 에이전트 7 + Custom GPT | 1인 사무국의 3반경 확장 (내부·구성원·대외) | K-앤트로픽 담론의 '시민단체 확장' 트랙 |
-| 3. 수업 | 포용 감수성·스크린리더 실사용 테스트 | 미니게임 3종 + Pick Me + 자리표 | 바이브→풀스택→에이전틱 3단 진화 | 서울교육청 가이드라인 "교사 개발자" 실증 |
+| 실천 | 왜 필요했나 | 구체 도구 | 가치 확장 접점 (매니페스토 연결) |
+|------|-------------|-----------|----------------------------------|
+| 1. 접근성 도구 | 시각장애인 교사의 PDF·HWP 접근 장벽 | docparse + hwpx-automation | 공익데이터 전처리 인프라 첫 단계 |
+| 2. 교실 수업 도구 | AIDT 폐기 후 교사가 직접 콘텐츠 만들어야 하는 상황 | 미니게임 3종 + Pick Me + 자리표 | 매니페스토 제안 7번 "모두를 위한 AI디지털 교육"의 현장 증거 |
+| 3. 노조 운영 도구 | 1인 사무국 장교조의 조직 운영·상담·대외 정보 | 스킬 19 + 에이전트 7 + Custom GPT | K-앤트로픽 담론에 "기존 시민단체 확장 경로" |
 
-### 클로징 3대 제안
+### 클로징 · 가치 확장의 세 갈래 (조심스러운 톤)
 
-1. 공익 AI 인증제에 **접근성 체크리스트** 포함
-2. K-앤트로픽 담론에 **"기존 시민단체 확장 트랙"** 추가
-3. 학운위 심의 표준양식의 **'접근성 필수화'**를 공익 과제로
+세 실천을 시민기술네트워크 매니페스토의 기존 담론에 **조심스럽게 얹는** 방식. "3대 제안"의 강한 요구가 아닌, 읽히기를 바라는 **가능성 제시**.
+
+1. 접근성 도구 → **공익데이터 전처리 인프라**의 첫 단계로
+2. 교실 수업 도구 → 매니페스토 **제안 7번 "모두를 위한 AI디지털 교육"**의 현장 증거로
+3. 노조 운영 도구 → 매니페스토 **제안 1번 K-앤트로픽**에 기존 시민단체 확장 트랙을 더하는 가능성으로
+
+Slide 14 quote: "공익 AI 가치의 한 실천 유형으로 · 조심스러운 얹기"
 
 ## 접근성·톤 가이드 (상위 CLAUDE.md 준수)
 
-- 슬라이드 HTML: 키보드 내비게이션, `aria-live`/`aria-label`, 고대비 모드, 이미지 `role="img"`+의미있는 `alt`, 제목 포커스 이동
+- 슬라이드 HTML: 키보드 내비게이션, `aria-live`/`aria-label`, 고대비 모드, 이미지 `role="img"`+의미있는 `alt`, 제목 포커스 이동, `data-bg` 오버레이(rgba(13,17,23,0.82))로 배경 이미지 위에서도 가독성 확보
+- 슬라이드 문구 원칙: 키워드·statements 중심 · 구어체("입니다"/"이 자리"/"제가" 등)와 "..가 아니라 ..다" 대조 패턴 제거 · 발표자가 말로 전달할 부분은 슬라이드에 적지 않음
 - 원고 작성: em dash(—) 금지, 짧은 문장·체험 중심 서술, 기술 용어 한국어 풀이
-- TTS 필요 시: `C:/Users/pc/Converters/TTS/elevenlabs_tts.py` 또는 ElevenLabs MCP
+- TTS: 이번 웨비나는 **Gemini TTS Kore voice** 사용 (실제 재생용). 다른 옵션: `C:/Users/pc/Converters/TTS/elevenlabs_tts.py` 또는 ElevenLabs MCP
 
 ## 발표 당일 체크리스트 요약
 
@@ -289,4 +316,10 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - **장교조 어시스턴트** (https://chat.openai.com/g/g-BYh0AUO3S-hamggehaneunjangaeingyoweonnodongjohab-khudt) — 로그인 상태 필수
 - **Story Detective** (https://engccer.github.io/story-detective-L1/) — 사전 로드 1회 필수
 
-Word Bomb laugh 해프닝 오디오 2종은 `index.html` 슬라이드 13에 `btn-laugh-wrong`·`btn-laugh-correct` 버튼으로 내장 (파일: `sfx/laugh-wrong.wav`, `sfx/laugh-correct.wav`).
+Word Bomb laugh 해프닝 오디오 2종은 `index.html` 슬라이드 8(Word Bomb)에 `btn-laugh-wrong`·`btn-laugh-correct` 버튼으로 내장 (파일: `sfx/laugh-wrong.wav`, `sfx/laugh-correct.wav`).
+
+### 내레이션 재생 동작
+
+- 기본값 `narrationEnabled = true` · 🔊 토글(`audioEnabled`)로 전체 오디오(SFX + 내레이션) 제어
+- 브라우저 autoplay 정책상 **첫 슬라이드(slide 1) 내레이션은 페이지 로드 직후엔 재생되지 않을 수 있음**. 화살표 키 또는 다음 버튼을 한 번 누르면 그 이후부터 정상 재생.
+- 슬라이드 전환 시 SFX 즉시 + 내레이션 400ms 지연 재생 (SFX 간섭 최소화)
