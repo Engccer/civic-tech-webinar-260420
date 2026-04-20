@@ -1,0 +1,10 @@
+.DS_Store
+Thumbs.db
+*.log
+node_modules/
+_pdf_check/
+.claude/
+ai_*.json
+dda_*.json
+di_*.json
+spedu_*.json

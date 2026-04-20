@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 시대 장애인 접근성 정책과 사례 — 시민기술네트워크 웨비나</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { width: 100%; height: 100%; overflow: hidden; font-family: 'Noto Sans KR', sans-serif; background: #0d1117; color: #e6edf3; }
+
+.particles { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; overflow: hidden; }
+.particle { position: absolute; border-radius: 50%; opacity: 0; animation: drift var(--dur) ease-in-out infinite; animation-delay: var(--delay); }
+@keyframes drift {
+  0% { opacity: 0; transform: translateY(100vh) scale(0); }
+  15% { opacity: 0.4; }
+  85% { opacity: 0.2; }
+  100% { opacity: 0; transform: translateY(-10vh) scale(1); }
+}
+
+.slide-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 10; }
+.slide {
+  position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  padding: 5vh 6vw;
+  opacity: 0; transform: scale(0.97);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+  pointer-events: none;
+  background: radial-gradient(ellipse at 50% 30%, #161b22 0%, #0d1117 60%);
+}
+.slide.active { opacity: 1; transform: scale(1); pointer-events: auto; }
+
+.slide[data-bg] { background-size: cover; background-position: center; }
+.slide[data-bg]::before {
+  content: ''; position: absolute; inset: 0;
+  background: rgba(13, 17, 23, 0.82);
+  z-index: 0;
+}
+.slide[data-bg] > * { position: relative; z-index: 1; }
+
+.progress-bar {
+  position: fixed; top: 0; left: 0; height: 3px; z-index: 100;
+  background: linear-gradient(90deg, #a78bfa, #5de6c8, #f5c842);
+  transition: width 0.5s ease;
+}
+
+h1 { font-size: clamp(1.8rem, 4.5vw, 3.2rem); font-weight: 900; line-height: 1.3; text-align: center; }
+h2 { font-size: clamp(1.5rem, 3.5vw, 2.4rem); font-weight: 700; line-height: 1.3; text-align: center; margin-bottom: 3vh; }
+h3 { font-size: clamp(1.1rem, 2.5vw, 1.6rem); font-weight: 500; line-height: 1.4; }
+p, li { font-size: clamp(0.95rem, 1.8vw, 1.25rem); line-height: 1.8; }
+ul { list-style: none; padding: 0; }
+ul li { padding-left: 1.5em; position: relative; margin-bottom: 0.6em; }
+ul li::before { content: '\25B8'; position: absolute; left: 0; color: #a78bfa; }
+
+.gold { color: #f5c842; }
+.cyan { color: #5de6c8; }
+.purple { color: #a78bfa; }
+.coral { color: #ff6b8a; }
+.dim { color: #8b949e; }
+
+.glass {
+  background: rgba(22, 27, 34, 0.6);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(167, 139, 250, 0.15);
+  border-radius: 16px;
+  padding: 3vh 3vw;
+  max-width: 900px;
+  width: 100%;
+}
+
+.badge { display: inline-block; padding: 0.25em 0.75em; border-radius: 999px; font-size: 0.85rem; font-weight: 500; }
+.badge-purple { background: rgba(167, 139, 250, 0.2); color: #a78bfa; }
+.badge-cyan { background: rgba(93, 230, 200, 0.2); color: #5de6c8; }
+.badge-gold { background: rgba(245, 200, 66, 0.2); color: #f5c842; }
+.badge-coral { background: rgba(255, 107, 138, 0.2); color: #ff6b8a; }
+
+.demo-link {
+  display: inline-block; padding: 0.5em 1.2em; border-radius: 8px;
+  font-size: 0.9rem; font-weight: 500; text-decoration: none;
+  border: 1px solid rgba(93, 230, 200, 0.4);
+  background: rgba(93, 230, 200, 0.1); color: #5de6c8;
+  cursor: pointer; transition: background 0.2s;
+  margin: 0.3em;
+}
+.demo-link:hover, .demo-link:focus { background: rgba(93, 230, 200, 0.25); outline: 2px solid #5de6c8; }
+
+.two-col { display: flex; gap: 2vw; align-items: flex-start; width: 100%; max-width: 900px; }
+.two-col > .col { flex: 1; }
+@media (max-width: 700px) { .two-col { flex-direction: column; } }
+
+.three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1.5vw; width: 100%; max-width: 1000px; }
+@media (max-width: 800px) { .three-col { grid-template-columns: 1fr; } }
+
+.compare-card {
+  background: rgba(22, 27, 34, 0.5);
+  backdrop-filter: blur(12px);
+  border-radius: 14px; padding: 2.5vh 2vw;
+  border: 1px solid rgba(167, 139, 250, 0.1);
+}
+.compare-card h3 { text-align: center; margin-bottom: 1.5vh; }
+
+.subtitle { font-size: clamp(1rem, 2vw, 1.3rem); color: #8b949e; text-align: center; margin-top: 1vh; }
+
+.quote {
+  border-left: 3px solid #f5c842;
+  padding: 1vh 2vw;
+  font-style: italic;
+  color: #c9d1d9;
+  margin: 1.5vh 0;
+}
+
+.nav-bar {
+  position: fixed; bottom: 2vh; left: 50%; transform: translateX(-50%);
+  z-index: 100;
+  display: flex; align-items: center; gap: 1.5em;
+  background: rgba(13, 17, 23, 0.85);
+  backdrop-filter: blur(10px);
+  padding: 0.6em 1.5em; border-radius: 999px;
+  border: 1px solid rgba(167, 139, 250, 0.15);
+}
+.nav-btn {
+  background: none; border: none; color: #8b949e; font-size: 0.95rem;
+  cursor: pointer; padding: 0.4em 0.8em; border-radius: 6px;
+  font-family: 'Noto Sans KR', sans-serif;
+  transition: color 0.2s, background 0.2s;
+  white-space: nowrap;
+}
+.nav-btn:hover, .nav-btn:focus { color: #e6edf3; background: rgba(167, 139, 250, 0.15); outline: none; }
+#slideCounter { color: #8b949e; font-size: 0.9rem; font-variant-numeric: tabular-nums; min-width: 4em; text-align: center; }
+
+.audio-toggle {
+  position: fixed; top: 1.5vh; right: 2vw; z-index: 100;
+  background: rgba(22, 27, 34, 0.7); border: 1px solid rgba(167, 139, 250, 0.2);
+  color: #e6edf3; font-size: 1.3rem; border-radius: 50%;
+  width: 2.5em; height: 2.5em; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: background 0.2s;
+}
+.audio-toggle:hover, .audio-toggle:focus { background: rgba(167, 139, 250, 0.2); outline: 2px solid #a78bfa; }
+
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+
+.key-point {
+  background: rgba(245, 200, 66, 0.08);
+  border: 1px solid rgba(245, 200, 66, 0.2);
+  border-radius: 10px; padding: 1.5vh 2vw;
+  margin: 1vh 0;
+}
+
+.pillar-card {
+  background: rgba(22, 27, 34, 0.5);
+  backdrop-filter: blur(12px);
+  border-radius: 14px; padding: 2vh 1.5vw;
+  border-top: 3px solid rgba(167, 139, 250, 0.6);
+  display: flex; flex-direction: column; gap: 0.8vh;
+}
+.pillar-card .layer-label { font-size: 0.75rem; color: #8b949e; text-transform: uppercase; letter-spacing: 0.05em; }
+.pillar-card .layer-value { font-size: 0.95rem; }
+
+.law-table { width: 100%; max-width: 900px; border-collapse: collapse; font-size: clamp(0.85rem, 1.5vw, 1.05rem); }
+.law-table th, .law-table td { padding: 0.8em 1em; border-bottom: 1px solid rgba(167,139,250,0.15); text-align: left; }
+.law-table th { color: #a78bfa; font-weight: 500; }
+
+.demo-buttons { display: flex; gap: 1em; justify-content: center; flex-wrap: wrap; margin-top: 1.5vh; }
+
+@media (max-width: 700px) {
+  .nav-bar { width: calc(100% - 24px); justify-content: space-between; gap: 0.4em; padding: 0.5em 0.8em; }
+  .nav-btn { font-size: 0.85rem; padding: 0.35em 0.45em; }
+  #slideCounter { min-width: 3.2em; }
+  .glass { padding: 2vh 4vw; }
+  .law-table { font-size: 0.72rem; }
+  .law-table th, .law-table td { padding: 0.45em 0.45em; }
+}
+</style>
+</head>
+<body>
+
+<!-- Ambient particles -->
+<div class="particles" id="particles" aria-hidden="true"></div>
+
+<!-- Progress bar -->
+<div class="progress-bar" id="progressBar" role="progressbar" aria-label="프레젠테이션 진행률" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"></div>
+
+<!-- Audio toggle -->
+<button class="audio-toggle" id="audioToggle" aria-label="오디오 켜기/끄기" aria-pressed="true" title="오디오 켜기/끄기">&#x1F50A;</button>
+
+<!-- Live region for screen readers -->
+<div class="sr-only" aria-live="polite" aria-atomic="true" id="announcer"></div>
+
+<!-- ============ SLIDES ============ -->
+<div class="slide-container">
+
+<!-- Slide 1: Title -->
+<section class="slide" id="slide-1" data-sfx="section-change" aria-label="슬라이드 1: 타이틀" data-bg style="background-image: url('images/image-01.png');">
+  <span class="badge badge-gold" style="margin-bottom: 2vh;">시민기술네트워크 · 이로운기술정책연구소 공개 웨비나</span>
+  <h1>AI 시대 <span class="cyan">장애인 접근성</span><br>정책과 사례</h1>
+  <p class="subtitle">현장에서 써 온 AI · 공익 AI와 만나는 길</p>
+  <p style="margin-top: 3vh; color: #8b949e;">
+    <strong class="gold">김헌용</strong> · 신명중학교 영어 교사<br>
+    함께하는장애인교원노동조합 위원장
+  </p>
+  <p class="dim" style="margin-top: 2vh; font-size: 0.85rem;">2026. 4. 20. ZOOM 웨비나</p>
+</section>
+
+<!-- Slide 2: Thesis -->
+<section class="slide" id="slide-2" data-sfx="slide-transition" aria-label="슬라이드 2: 세 역할의 AI 실천" data-bg style="background-image: url('images/image-02.png');">
+  <div class="glass" style="text-align:center; max-width: 900px;">
+    <h2 style="font-size: clamp(1.6rem, 3.5vw, 2.6rem); line-height: 1.5;">
+      장애인 당사자 · 교사 · 노조 위원장<br>
+      세 역할의 AI 실천
+    </h2>
+    <p style="margin-top: 2vh; color: #8b949e; font-size: clamp(1rem, 1.8vw, 1.2rem);">
+      <span class="cyan">접근성 도구</span> · <span class="gold">교실 수업 도구</span> · <span class="purple">노동조합 운영 도구</span>
+    </p>
+  </div>
+</section>
+
+<!-- Slide 3: 두 고민 프레임 -->
+<section class="slide" id="slide-3" data-sfx="slide-transition" aria-label="슬라이드 3: 함께 고민해 온 두 주제" data-bg style="background-image: url('images/image-03.png');">
+  <h2>함께 고민해 온 두 주제</h2>
+  <p class="dim" style="text-align:center; margin-bottom: 2vh; font-size:0.9em;">2025.5 시민기술네트워크 매니페스토 · 제안 8번 <span class="gold">"교육 분야 포용적 AI 개발·도입"</span></p>
+  <div class="two-col" style="max-width: 900px; margin-top: 1vh;">
+    <div class="pillar-card col"><span class="layer-label cyan">고민 1 · 장애인 접근성</span><span class="layer-value">법제도는 이미 촘촘<br><span class="dim" style="font-size:0.9em;">그러나 실천 사례는 드물다</span></span></div>
+    <div class="pillar-card col"><span class="layer-label gold">고민 2 · 교육 AI</span><span class="layer-value">AIDT 폐기 후 학교 단위로 이양<br><span class="dim" style="font-size:0.9em;">활용법·효과성 실증 부재</span></span></div>
+  </div>
+</section>
+
+<!-- Slide 4: 고민 1 · 법령 표 -->
+<section class="slide" id="slide-4" data-sfx="slide-transition" aria-label="슬라이드 4: 고민 1 접근성 법령" data-bg style="background-image: url('images/image-04.png');">
+  <span class="badge badge-cyan" style="margin-bottom: 1.5vh;">고민 1 · 장애인 접근성</span>
+  <h2>법은 이미 이만큼 말하고 있다</h2>
+  <p class="dim" style="text-align:center; margin-bottom: 1.2vh; font-size: 0.88em;">AI기본법·디지털포용법 2026.1.22 시행 · 장차법 2025.11.11 · 특교법 2025.10.1</p>
+  <table class="law-table">
+    <tr><th style="width:30%;">법령·조항</th><th>요지</th></tr>
+    <tr><td class="cyan">AI 기본법 제27조</td><td>윤리원칙 3요소 · 안전성 · <span class="gold">접근성</span> · 번영</td></tr>
+    <tr><td class="cyan">디지털포용법 제4조</td><td>지능정보기술 없이도 동등 이용 · <span class="gold">대체수단</span></td></tr>
+    <tr><td class="cyan">디지털포용법 제19조</td><td>국가기관 웹 · 앱 · 단말기 · 전자출판물 접근성</td></tr>
+    <tr><td class="cyan">디지털포용법 제21조</td><td>접근성 <span class="gold">품질인증</span> 제도</td></tr>
+    <tr><td class="cyan">디지털포용법 제23조</td><td>접근성 제품 <span class="gold">우선구매</span></td></tr>
+    <tr><td class="purple">장차법 제14조</td><td>교육 정당한 편의 (화면낭독 · 무지점자단말기)</td></tr>
+    <tr><td class="purple">장차법 제21조 ②</td><td>앱 · 정보통신 정당한 편의 <span class="dim" style="font-size:0.88em;">(2021 신설 · 디지털포용법 제19조와 중첩)</span></td></tr>
+    <tr><td class="purple">장차법 제23조</td><td>국가·지자체 정보접근 의무 · 학습지원 서비스 포함</td></tr>
+    <tr><td class="purple">특교법 제28조 ⑧</td><td>각급학교 정보 · 장애유형 적합 방식</td></tr>
+    <tr><td class="gold">장교조 단협 제33조</td><td>디지털 교과서 접근성 (2020 · 당사자 선도)</td></tr>
+  </table>
+  <p class="dim" style="margin-top: 1.5vh; text-align: center;">그러나 실천 사례는 드물다</p>
+</section>
+
+<!-- Slide 5: 고민 2 · AIDT 폐기 이후 교육 AI 공백 -->
+<section class="slide" id="slide-5" data-sfx="slide-transition" aria-label="슬라이드 5: 고민 2 교육 AI 공백" data-bg style="background-image: url('images/image-05.png');">
+  <span class="badge badge-gold" style="margin-bottom: 1.5vh;">고민 2 · 교육 AI</span>
+  <h2>AIDT 폐기 후, 학교가 혼자 답해야 한다</h2>
+  <div class="glass">
+    <ul>
+      <li><span class="coral">2025.8</span> AIDT 교과서 → 교육자료로 격하</li>
+      <li><span class="coral">2026.3</span> 단위학교 학운위가 학습지원 SW 심의</li>
+      <li>교육부·교육청은 지침만 제시 · <span class="gold">활용법·효과성 실증은 학교 몫</span></li>
+      <li>접근성은 '<span class="coral">선택 기준</span>' 이름만 · 구체 체크리스트 부재</li>
+    </ul>
+    <p class="quote" style="margin-top:1.5vh;">공익 AI 담론이 교육 영역에 닿아야 할 지점</p>
+  </div>
+</section>
+
+<!-- Slide 6: 전환 · 세 실천 예고 -->
+<section class="slide" id="slide-6" data-sfx="section-change" aria-label="슬라이드 6: 세 역할의 AI 실천 예고" data-bg style="background-image: url('images/image-06.png');">
+  <h2>두 고민 앞에서 · 세 역할의 AI 실천</h2>
+  <div class="three-col" style="margin-top: 2.5vh;">
+    <div class="pillar-card"><span class="layer-label cyan">접근성 도구</span><span class="layer-value">docparse · hwpx-automation<br><span class="dim" style="font-size:0.85em;">장애인 교사의 일상 업무</span></span></div>
+    <div class="pillar-card"><span class="layer-label gold">교실 수업 도구</span><span class="layer-value">미니게임 3종 · Pick Me · 자리표<br><span class="dim" style="font-size:0.85em;">영어 교사의 수업 콘텐츠</span></span></div>
+    <div class="pillar-card"><span class="layer-label purple">노조 운영 도구</span><span class="layer-value">중집위 스킬 · 고충 에이전트 · 장교조 어시스턴트<br><span class="dim" style="font-size:0.85em;">1인 사무국의 3반경</span></span></div>
+  </div>
+</section>
+
+<!-- Slide 7: 실천 1 · 접근성 도구 -->
+<section class="slide" id="slide-7" data-sfx="section-change" aria-label="슬라이드 7: 실천 1 접근성 도구" data-bg style="background-image: url('images/image-07.png');">
+  <span class="badge badge-cyan" style="margin-bottom: 1.5vh;">실천 1 · 접근성 도구</span>
+  <h2>장애인 교사의 일상 업무 도구</h2>
+  <div class="glass">
+    <ul>
+      <li><span class="cyan">docparse</span> · 5 파서 조합 · 적응형 진단 · Primary/Patch 퓨전<br><span class="dim" style="font-size:0.9em;">Upstage · Gemini · Mistral · LlamaParse · OpenDataLoader</span></li>
+      <li><span class="cyan">hwpx-automation</span> · HWP/HWPX XML 직접 편집 · 공문 서식·표·이미지 삽입<br><span class="dim" style="font-size:0.9em;"><a href="https://github.com/Engccer/hwpx-automation" target="_blank" rel="noopener" class="gold">MIT 오픈소스</a></span></li>
+    </ul>
+    <div class="key-point" style="margin-top: 1.5vh;">
+      <p>PDF · HWP = <span class="coral">시각장애인 교사에게 접근 장벽의 첫 관문</span></p>
+      <p style="margin-top: 0.5em;">그 벽을 뚫는 도구 · <span class="gold">범용 문서 파이프라인으로 확장</span></p>
+    </div>
+    <p class="quote" style="margin-top: 1vh;">장애 요구 = 극한 사용자 경계 조건 → 범용 품질 상승</p>
+  </div>
+</section>
+
+<!-- Slide 8: 실천 2-a · Word Bomb -->
+<section class="slide" id="slide-8" data-sfx="slide-transition" aria-label="슬라이드 8: Word Bomb과 laugh 해프닝" data-bg style="background-image: url('images/image-08.png');">
+  <span class="badge badge-gold" style="margin-bottom: 1.5vh;">실천 2 · 교실 수업 도구</span>
+  <h2>교사 개발자의 속도: Word Bomb</h2>
+  <div class="glass">
+    <ul>
+      <li>수업 30분 전 · 영영풀이 학습지 → 게임 아이디어</li>
+      <li><span class="cyan">타이머 단어 퀴즈</span> 콘셉트</li>
+      <li>단일 HTML · 공강 30분 완성</li>
+    </ul>
+    <div class="key-point" style="margin-top: 1.5vh;">
+      <p><span class="gold">laugh</span> 발음 = 진짜 <span class="coral">웃음소리</span> (AI의 유쾌한 실수)</p>
+      <p style="margin-top: 0.5em;">AI의 실패도 수업 자료가 되는 장면</p>
+      <div class="demo-buttons">
+        <button class="demo-link" id="btn-laugh-wrong" style="cursor:pointer;border:1px solid rgba(255,107,138,0.4);background:rgba(255,107,138,0.1);color:#ff6b8a;" aria-label="AI가 잘못 생성한 laugh 웃음소리 듣기">&#x1F923; AI의 실수</button>
+        <button class="demo-link" id="btn-laugh-correct" style="cursor:pointer;border:1px solid rgba(93,230,200,0.4);background:rgba(93,230,200,0.1);color:#5de6c8;" aria-label="수정된 laugh 정상 발음 듣기">&#x2705; 수정된 발음</button>
+        <a class="demo-link" href="https://engccer.github.io/word-bomb-L1/" target="_blank" rel="noopener" aria-label="Word Bomb 새 창에서 열기">Word Bomb &rarr;</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Slide 9: 실천 2-b · Story Detective 라이브 -->
+<section class="slide" id="slide-9" data-sfx="slide-transition" aria-label="슬라이드 9: Story Detective 라이브 시연" data-bg style="background-image: url('images/image-09.png');">
+  <span class="badge badge-gold" style="margin-bottom: 1.5vh;">실천 2 · 교실 · 라이브 시연</span>
+  <h2>교사 개발자의 콘텐츠: Story Detective</h2>
+  <div class="glass">
+    <ul>
+      <li>교과서 지문 → <span class="cyan">탐정 서사</span> 재구성</li>
+      <li>학생 = 탐정 · 단서로 지문 읽기</li>
+      <li>스택 · Gemini TTS + Image · ElevenLabs MCP</li>
+    </ul>
+    <div class="key-point" style="margin-top: 1.5vh;">
+      <p>출판사 아닌 <span class="gold">교실 현장 교사</span>가 만든 학습 콘텐츠</p>
+    </div>
+    <div class="demo-buttons">
+      <a class="demo-link" href="https://engccer.github.io/story-detective-L1/" target="_blank" rel="noopener" aria-label="Story Detective 새 창에서 열기">Story Detective 라이브 &rarr;</a>
+    </div>
+  </div>
+</section>
+
+<!-- Slide 10: 실천 2-c · Pick Me -->
+<section class="slide" id="slide-10" data-sfx="slide-transition" aria-label="슬라이드 10: Pick Me 접근성 철학" data-bg style="background-image: url('images/image-10.png');">
+  <span class="badge badge-gold" style="margin-bottom: 1.5vh;">실천 2 · 교실 수업 도구</span>
+  <h2>첫 프롬프트 한 줄: "접근성을 고려해 줘"</h2>
+  <div class="glass">
+    <ul>
+      <li>동료 교사 요청 → 3일 완성 · 3D 선발 앱</li>
+      <li>첫 프롬프트부터 <span class="gold">ARIA · 키보드 · 고대비</span></li>
+      <li>AI가 접근성 요구를 착실히 구현</li>
+    </ul>
+    <p class="quote">접근성 구현의 난이도 ≠ 문제<br>우선순위에서의 밀림 = 문제<br>자연어 소프트웨어 시대 = 미뤄 둘 이유 소멸</p>
+    <div class="demo-buttons">
+      <a class="demo-link" href="https://engccer.github.io/pickme/" target="_blank" rel="noopener" aria-label="Pick Me 새 창에서 열기">Pick Me &rarr;</a>
+    </div>
+  </div>
+</section>
+
+<!-- Slide 11: 실천 2-d · 자리표 -->
+<section class="slide" id="slide-11" data-sfx="slide-transition" aria-label="슬라이드 11: 자리표 앱과 한계" data-bg style="background-image: url('images/image-11.png');">
+  <span class="badge badge-gold" style="margin-bottom: 1.5vh;">실천 2 · 교실 수업 도구</span>
+  <h2>공개한 한계 · 다음 표준의 씨앗: 자리표</h2>
+  <div class="glass">
+    <ul>
+      <li>2025.8 Artifact HTML 1장 → <span class="cyan">Supabase + Vercel 풀스택</span></li>
+      <li>배포 현실 · 한글 이름 HTTP 헤더 오류 · 무료 DB 한도 초과</li>
+    </ul>
+    <div class="key-point" style="margin-top: 1.5vh;">
+      <p><span class="coral">한계</span> · 시각 반전 <strong>완벽</strong> · 스크린리더 반전 <strong>미구현</strong></p>
+      <p style="margin-top: 0.6em;">한계의 공개 기록 = <span class="gold">다음 표준의 시작</span></p>
+    </div>
+    <p class="dim" style="margin-top: 1.5vh; text-align: center;">서울교육청 '교사 개발자' 개념 = 이미 당사자 교사가 실현 중</p>
+  </div>
+</section>
+
+<!-- Slide 12: 실천 3-a · 3반경 -->
+<section class="slide" id="slide-12" data-sfx="section-change" aria-label="슬라이드 12: 실천 3 노조 운영 3반경" data-bg style="background-image: url('images/image-12.png');">
+  <span class="badge badge-purple" style="margin-bottom: 1.5vh;">실천 3 · 노동조합 운영 도구</span>
+  <h2>1인 사무국의 3반경</h2>
+  <p class="subtitle">스킬 19 · 에이전트 7 · Custom GPT 1</p>
+  <div class="three-col" style="margin-top: 3vh;">
+    <div class="pillar-card"><span class="layer-label purple">내부 반경</span><span class="layer-value"><strong>중집위 스킬</strong><br>반복 업무의 절차화</span></div>
+    <div class="pillar-card"><span class="layer-label cyan">구성원 반경</span><span class="layer-value"><strong>고충 상담사 에이전트</strong><br>당사자 상담 선정리</span></div>
+    <div class="pillar-card"><span class="layer-label gold">대외 반경</span><span class="layer-value"><strong>장교조 어시스턴트</strong><br>공익 정보의 재배포</span></div>
+  </div>
+</section>
+
+<!-- Slide 13: 실천 3-b · 장교조 어시스턴트 라이브 -->
+<section class="slide" id="slide-13" data-sfx="slide-transition" aria-label="슬라이드 13: 장교조 어시스턴트 라이브" data-bg style="background-image: url('images/image-13.png');">
+  <span class="badge badge-purple" style="margin-bottom: 1.5vh;">실천 3 · 노조 · 라이브 시연</span>
+  <h2>장교조 어시스턴트 · 노조로 이어지는 경로</h2>
+  <div class="glass">
+    <ul>
+      <li>OpenAI Custom GPT · <span class="cyan">비조합원도 접근 가능</span></li>
+      <li>지식 소스 · 장교조 공식 정보 · 근로지원인 · 편의지원</li>
+      <li>시연 · <span class="gold">"근로지원인 제도 신청 절차"</span></li>
+    </ul>
+    <div class="key-point" style="margin-top: 1.5vh;">
+      <p>비조합원 → 어시스턴트 → <span class="gold">노조로 문의 전환</span> 사례</p>
+      <p style="margin-top: 0.6em;">공익 AI = <span class="cyan">시민사회 접촉면의 확장</span></p>
+    </div>
+    <div class="demo-buttons">
+      <a class="demo-link" href="https://chat.openai.com/g/g-BYh0AUO3S-hamggehaneunjangaeingyoweonnodongjohab-khudt" target="_blank" rel="noopener" aria-label="장교조 어시스턴트 새 창에서 열기">장교조 어시스턴트 &rarr;</a>
+    </div>
+  </div>
+</section>
+
+<!-- Slide 14: 가치 확장 · 조심스러운 연결 -->
+<section class="slide" id="slide-14" data-sfx="section-change" aria-label="슬라이드 14: 공익 AI 가치의 가능한 확장" data-bg style="background-image: url('images/image-14.png');">
+  <h2>공익 AI 가치의 가능한 확장</h2>
+  <div class="glass">
+    <ul style="line-height:1.9;">
+      <li><span class="cyan">접근성 도구 (docparse · hwpx)</span><br><span style="font-size:0.94em;">→ 공공 문서를 AI가 읽을 수 있게 하는 <span class="gold">공익데이터 전처리 인프라의 첫 단계</span></span></li>
+      <li><span class="gold">교실 수업 도구 (미니게임 · Pick Me · 자리표)</span><br><span style="font-size:0.94em;">→ 매니페스토 제안 7번 <span class="gold">"모두를 위한 AI디지털 교육"</span>의 현장 증거</span></li>
+      <li><span class="purple">노조 운영 도구 (장교조 어시스턴트)</span><br><span style="font-size:0.94em;">→ K-앤트로픽 담론에 <span class="gold">기존 시민단체 확장 경로</span>를 더하는 가능성</span></li>
+    </ul>
+    <p class="quote" style="margin-top: 1.5vh;">공익 AI 가치의 한 실천 유형으로 · 조심스러운 얹기</p>
+  </div>
+</section>
+
+<!-- Slide 15: Thank You -->
+<section class="slide" id="slide-15" data-sfx="section-change" aria-label="슬라이드 15: 감사합니다" data-bg style="background-image: url('images/image-15.png');">
+  <h1 class="gold">감사합니다</h1>
+  <p class="subtitle" style="margin-top: 2vh;">Q&amp;A로 이어집니다</p>
+  <div class="glass" style="margin-top: 3vh; max-width: 700px;">
+    <p style="text-align:center; color: #8b949e; font-size: 0.9rem;">참고 링크</p>
+    <ul style="margin-top: 1vh;">
+      <li><a href="https://github.com/Engccer/hwpx-automation" target="_blank" rel="noopener" class="cyan">HWPX-Automation GitHub</a></li>
+      <li><a href="https://chat.openai.com/g/g-BYh0AUO3S-hamggehaneunjangaeingyoweonnodongjohab-khudt" target="_blank" rel="noopener" class="cyan">장교조 어시스턴트</a></li>
+      <li><a href="https://engccer.github.io/word-bomb-L1/" target="_blank" rel="noopener" class="cyan">Word Bomb</a> · <a href="https://engccer.github.io/story-detective-L1/" target="_blank" rel="noopener" class="cyan">Story Detective</a> · <a href="https://engccer.github.io/grammar-potion-L1/" target="_blank" rel="noopener" class="cyan">Grammar Potion Lab</a></li>
+      <li><a href="https://engccer.github.io/pickme/" target="_blank" rel="noopener" class="cyan">Pick Me</a></li>
+    </ul>
+  </div>
+</section>
+
+</div>
+<!-- ============ END SLIDES ============ -->
+
+<!-- Navigation bar -->
+<nav class="nav-bar" aria-label="프레젠테이션 탐색">
+  <button class="nav-btn" id="prevBtn" aria-label="이전 슬라이드">&larr; 이전</button>
+  <span id="slideCounter">1 / 15</span>
+  <button class="nav-btn" id="nextBtn" aria-label="다음 슬라이드">다음 &rarr;</button>
+</nav>
+
+<script>
+'use strict';
+
+// ===== PARTICLES =====
+(function() {
+  var container = document.getElementById('particles');
+  var colors = ['#a78bfa', '#5de6c8', '#f5c842'];
+  for (var i = 0; i < 30; i++) {
+    var p = document.createElement('div');
+    p.className = 'particle';
+    var size = 2 + Math.random() * 3;
+    p.style.width = size + 'px';
+    p.style.height = size + 'px';
+    p.style.left = Math.random() * 100 + '%';
+    p.style.background = colors[Math.floor(Math.random() * colors.length)];
+    p.style.setProperty('--dur', (15 + Math.random() * 15) + 's');
+    p.style.setProperty('--delay', (Math.random() * 20) + 's');
+    container.appendChild(p);
+  }
+})();
+
+// ===== STATE =====
+var allSlides = document.querySelectorAll('.slide');
+var TOTAL_SLIDES = allSlides.length;
+var currentSlide = -1;
+var audioEnabled = true;
+var narrationEnabled = false;
+var currentAudio = null;
+var narrationTimer = null;
+
+var counter = document.getElementById('slideCounter');
+var progressBarEl = document.getElementById('progressBar');
+var prevBtn = document.getElementById('prevBtn');
+var nextBtn = document.getElementById('nextBtn');
+var announcer = document.getElementById('announcer');
+
+counter.textContent = '1 / ' + TOTAL_SLIDES;
+
+// ===== SFX =====
+var SFX = {
+  'slide-transition': 'sfx/slide-transition.mp3',
+  'section-change': 'sfx/section-change.mp3',
+  'level-up': 'sfx/level-up.mp3'
+};
+
+function stopCurrentAudio() {
+  if (currentAudio) {
+    currentAudio.pause();
+    currentAudio.currentTime = 0;
+    currentAudio = null;
+  }
+}
+
+function playSfx(name) {
+  if (!audioEnabled || !SFX[name]) return;
+  try {
+    var audio = new Audio(SFX[name]);
+    audio.volume = 0.3;
+    audio.play().catch(function() {});
+  } catch(e) {}
+}
+
+function playNarration(slideNum) {
+  if (!audioEnabled || !narrationEnabled) return;
+  var path = 'narration/slide-' + String(slideNum).padStart(2, '0') + '_gemini_tts.wav';
+  try {
+    var audio = new Audio(path);
+    currentAudio = audio;
+    audio.play().catch(function() {});
+  } catch(e) {}
+}
+
+// ===== SLIDE NAVIGATION =====
+function goToSlide(n) {
+  if (n < 0 || n >= TOTAL_SLIDES || n === currentSlide) return;
+
+  if (currentSlide >= 0) {
+    var oldSlide = allSlides[currentSlide];
+    oldSlide.classList.remove('active');
+    oldSlide.setAttribute('aria-hidden', 'true');
+  }
+
+  if (narrationTimer) { clearTimeout(narrationTimer); narrationTimer = null; }
+  stopCurrentAudio();
+
+  currentSlide = n;
+  var newSlide = allSlides[n];
+  newSlide.classList.add('active');
+  newSlide.setAttribute('aria-hidden', 'false');
+
+  counter.textContent = (n + 1) + ' / ' + TOTAL_SLIDES;
+
+  var pct = ((n + 1) / TOTAL_SLIDES) * 100;
+  progressBarEl.style.width = pct + '%';
+  progressBarEl.setAttribute('aria-valuenow', pct);
+
+  var label = newSlide.getAttribute('aria-label') || ('슬라이드 ' + (n + 1));
+  announcer.textContent = label;
+
+  var sfxName = newSlide.getAttribute('data-sfx');
+  if (sfxName) playSfx(sfxName);
+
+  narrationTimer = setTimeout(function() { narrationTimer = null; playNarration(n + 1); }, 400);
+
+  prevBtn.disabled = (n === 0);
+  nextBtn.disabled = (n === TOTAL_SLIDES - 1);
+
+  // Focus new slide heading for screen reader
+  var h = newSlide.querySelector('h1, h2');
+  if (h) {
+    h.setAttribute('tabindex', '-1');
+    try { h.focus({ preventScroll: true }); } catch(e) {}
+  }
+}
+
+// ===== EVENT LISTENERS =====
+prevBtn.addEventListener('click', function() { goToSlide(currentSlide - 1); });
+nextBtn.addEventListener('click', function() { goToSlide(currentSlide + 1); });
+
+document.addEventListener('keydown', function(e) {
+  if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+  if (e.target.tagName === 'BUTTON' && e.key === 'Enter') return; // 버튼은 자기 역할
+  switch(e.key) {
+    case 'ArrowRight':
+      e.preventDefault(); goToSlide(currentSlide + 1); break;
+    case 'ArrowLeft':
+    case 'Backspace':
+      e.preventDefault(); goToSlide(currentSlide - 1); break;
+    case 'Home':
+      e.preventDefault(); goToSlide(0); break;
+    case 'End':
+      e.preventDefault(); goToSlide(TOTAL_SLIDES - 1); break;
+    case 'PageDown':
+      e.preventDefault(); goToSlide(currentSlide + 1); break;
+    case 'PageUp':
+      e.preventDefault(); goToSlide(currentSlide - 1); break;
+  }
+});
+
+// Audio toggle
+document.getElementById('audioToggle').addEventListener('click', function() {
+  audioEnabled = !audioEnabled;
+  this.innerHTML = audioEnabled ? '&#x1F50A;' : '&#x1F507;';
+  this.setAttribute('aria-pressed', String(audioEnabled));
+  this.setAttribute('aria-label', audioEnabled ? '오디오 끄기' : '오디오 켜기');
+  if (!audioEnabled) stopCurrentAudio();
+});
+
+document.getElementById('audioToggle').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); this.click(); }
+});
+
+// ===== LAUGH DEMO BUTTONS =====
+document.getElementById('btn-laugh-wrong').addEventListener('click', function(e) {
+  e.stopPropagation();
+  stopCurrentAudio();
+  currentAudio = new Audio('sfx/laugh-wrong.wav');
+  currentAudio.play().catch(function() {});
+});
+document.getElementById('btn-laugh-wrong').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); e.stopPropagation(); this.click(); }
+});
+document.getElementById('btn-laugh-correct').addEventListener('click', function(e) {
+  e.stopPropagation();
+  stopCurrentAudio();
+  currentAudio = new Audio('sfx/laugh-correct.wav');
+  currentAudio.play().catch(function() {});
+});
+document.getElementById('btn-laugh-correct').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); e.stopPropagation(); this.click(); }
+});
+
+// ===== INIT =====
+for (var i = 0; i < allSlides.length; i++) {
+  allSlides[i].setAttribute('aria-hidden', 'true');
+}
+goToSlide(0);
+</script>
+
+</body>
+</html>
